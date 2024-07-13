@@ -1,19 +1,19 @@
 /// DEPENDENCIES 
 const { Op } = require('sequelize');
 const express = require('express');
-const bands = express.Router();
-const { Band } = require('../models');
+const events = express.Router();
+const { Event } = require('../models');
 
 // FIND ALL BANDS
-bands.get('/', async (req, res) => {
+events.get('/', async (req, res) => {
     try {
-        const foundBands = await Band.findAll({
+        const foundEvents = await Event.findAll({
             order: [ [ 'available_start_time', 'ASC' ] ],
             where: {
                 name: { [Op.like]: `%${req.query.name ? req.query.name : ''}%` }
             }
         })
-        res.status(200).json(foundBands)
+        res.status(200).json(foundEvents)
     } catch (error) {
         res.status(500).json(error)
     }
@@ -21,5 +21,5 @@ bands.get('/', async (req, res) => {
 
 
 // EXPORT
-module.exports = bands;
+module.exports = Events;
 
