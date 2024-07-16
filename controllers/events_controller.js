@@ -19,7 +19,58 @@ events.get('/', async (req, res) => {
     }
 })
 
+// Create route
+events.post('/', async (req, res) => {
+    try {
+      const newEvent = await Event.create(req.body);
+      res.status(201).json(newEvent);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+  
+  // Update route
+  events.put('/:id', async (req, res) => {
+    try {
+      const [updated] = await Event.update(req.body, {
+        where: { id: req.params.id }
+      });
+      if (!updated) {
+        return res.status(404).json({ error: 'Event not found' });
+      }
+      const updatedEvent = await Event.findByPk(req.params.id);
+      res.json(updatedEvent);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+  
+  // Delete route
+  events.delete('/:id', async (req, res) => {
+    try {
+      const deleted = await Event.destroy({
+        where: { id: req.params.id }
+      });
+      if (!deleted) {
+        return res.status(404).json({ error: 'Event not found' });
+      }
+      res.status(204).send();
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
+  module.exports = events;
+
+
+
+
+
+
+
+
+
 
 // EXPORT
-module.exports = Events;
+module.exports = events;
 
