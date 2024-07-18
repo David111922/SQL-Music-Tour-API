@@ -1,4 +1,5 @@
 'use strict';
+const { Events } = require('pg');
 const {
   Model
 } = require('sequelize');
@@ -17,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     event_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
+      allowNull: false
     },
     name: {
         type: DataTypes.STRING,

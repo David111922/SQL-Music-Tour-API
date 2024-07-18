@@ -1,10 +1,10 @@
 /// DEPENDENCIES 
-const { Op } = require('sequelize');
-const express = require('express');
-const events = express.Router();
-const { Event } = require('../models');
+const events = require('express').Router()
+const { Op } = require('sequelize')
+const db = require('../models')
+const { Event } = db
 
-// FIND ALL BANDS
+// FIND ALL EVENTS
 events.get('/', async (req, res) => {
     try {
         const foundEvents = await Event.findAll({
@@ -19,33 +19,52 @@ events.get('/', async (req, res) => {
     }
 })
 
-// Create route
+// FIND A SPECIFIC EVENT - GET
+events.get('/:id', async (req, res) => {
+  try {
+      const foundEvent = await Event.findOne({
+          where: { event_id: req.params.id }
+      })
+      res.status(200).json(foundEvent)
+  } catch (error) {
+      res.status(500).json(error)
+  }
+})
+
+
+// CREATE A NEW EVENT - POST
 events.post('/', async (req, res) => {
-    try {
-      const newEvent = await Event.create(req.body);
-      res.status(201).json(newEvent);
-    } catch (err) {
-      res.status(400).json({ error: err.message });
-    }
-  });
+  try {
+      const NewEvent = await Event.create(req.body)
+      res.status(201).json({
+          message: 'Successfully inserted a new Event!',
+          data: NewEvent
+      })
+  } catch {
+      res.status(422).json(error)
+  }
+})
+
+// UPDATE AN EVENT - PUT
+events.put('/:id', async (req, res) => {
+  try {
+      const updatedEvent = await Event.update(req.body, {
+          where: { event_id: req.params.id },
+          returning: true
+      })
+      res.status(202).json({
+          message: `Successfully updated ${updatedEvent} Event(s)`
+      })
+  } catch (error) {
+      res.status(500).json(error)
+  }
+})
+
+
+ 
+
   
-  // Update route
-  events.put('/:id', async (req, res) => {
-    try {
-      const [updated] = await Event.update(req.body, {
-        where: { id: req.params.id }
-      });
-      if (!updated) {
-        return res.status(404).json({ error: 'Event not found' });
-      }
-      const updatedEvent = await Event.findByPk(req.params.id);
-      res.json(updatedEvent);
-    } catch (err) {
-      res.status(400).json({ error: err.message });
-    }
-  });
-  
-  // Delete route
+  // DELETE AN EVENT
   events.delete('/:id', async (req, res) => {
     try {
       const deleted = await Event.destroy({
@@ -59,7 +78,7 @@ events.post('/', async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
-  
+  // EXPORT
   module.exports = events;
 
 
@@ -71,6 +90,6 @@ events.post('/', async (req, res) => {
 
 
 
-// EXPORT
-module.exports = events;
+
+
 

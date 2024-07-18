@@ -50,23 +50,20 @@ bands.post('/', async (req, res) => {
 // UPDATE A BAND - PUT
 bands.put('/:id', async (req, res) => {
     try {
-        const updated = await Band.update(req.body, {
-            where: { band_id: req.params.id }
-        });
-        if (updated[0] > 0) {
-            const updatedBand = await Band.findOne({ where: { band_id: req.params.id } });
-            res.status(202).json({
-                message: 'Successfully updated the band',
-                data: updatedBand
-            });
-        } else {
-            res.status(404).json({ message: 'Band not found' });
-        }
+        const updatedBands = await Band.update(req.body, {
+            where: { band_id: req.params.id },
+            returning: true
+        })
+        res.status(202).json({
+            message: `Successfully updated ${updatedBands} band(s)`
+        })
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json(error)
     }
-});
+})
 
+
+ 
 // DELETE A BAND - DELETE
 bands.delete('/:id', async (req, res) => {
     try {
