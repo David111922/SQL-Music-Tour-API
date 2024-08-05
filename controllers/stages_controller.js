@@ -8,10 +8,10 @@ const { Stage } = db
 stages.get('/', async (req, res) => {
     try {
         const foundStage = await Stage.findAll({
-            order: [ [ 'available_start_time', 'ASC' ] ],
+            order: [ [ 'stage_name', 'ASC' ] ],
             where: {
-                name: { [Op.like]: `%${req.query.name ? req.query.name : ''}%` }
-            }
+              stage_name: { [Op.like]: `%${req.query.stage_name ? req.query.stage_name : ''}%` }
+          }
         })
         res.status(200).json(foundStage)
     } catch (error) {

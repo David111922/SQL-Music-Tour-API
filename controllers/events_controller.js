@@ -8,9 +8,9 @@ const { Event } = db
 events.get('/', async (req, res) => {
     try {
         const foundEvents = await Event.findAll({
-            order: [ [ 'available_start_time', 'ASC' ] ],
+            order: [ [ 'start_time', 'ASC' ] ],
             where: {
-                name: { [Op.like]: `%${req.query.name ? req.query.name : ''}%` }
+                event_name: { [Op.like]: `%${req.query.event_name ? req.query.event_name : ''}%` }
             }
         })
         res.status(200).json(foundEvents)

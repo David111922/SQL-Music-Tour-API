@@ -3,28 +3,39 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Stage extends Model {
+  class Event extends Model {
 
     static associate(models) {
-
     }
   }
-  Stage.init({
-    stage_id: {
+  Event.init({
+    event_id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    stage_name: {
+    event_name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    start_time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    end_time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    }
   }, {
     sequelize,
-    modelName: 'Stage',
-    tableName: 'stages',
+    modelName: 'Event',
+    tableName: 'events',
     timestamps: false
   });
-  return Stage;
+  return Event;
 };
